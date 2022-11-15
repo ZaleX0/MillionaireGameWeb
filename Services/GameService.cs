@@ -29,17 +29,24 @@ public class GameService
 	public GameViewModel ResultGameViewModel(GameViewModel model)
 	{
 		model.IsAnswerCorrect = _answerRepository.CheckIfAnswerCorrect(model.LastAnswerId);
-		return model;
+
+        if (model.PrizeLevel >= _prizeLevelsRepository.GetLastPrizeLevel().Id)
+			if (model.IsAnswerCorrect == true)
+				model.IsGameWon = true;
+
+        return model;
 	}
 
-    public GameViewModel NextGameViewModel(GameViewModel model)
+    public GameViewModel NextGameViewModel(int prizeLevel)
 	{
-		model.PrizeLevel++;
+		var model = new GameViewModel();
+		model.PrizeLevel = prizeLevel + 1;
 		model.PrizeLevelAmount = GetPrizeAmount(model.PrizeLevel);
 
         var question = GetRandomQuestionDto(model.PrizeLevel);
 		var answers = GetAnswersDto(question.Id);
 
+		// TODO: randomize answer order
 		model.Question = question;
 		model.AnswerA = answers[0];
 		model.AnswerB = answers[1];
@@ -47,9 +54,27 @@ public class GameService
 		model.AnswerD = answers[3];
 
 		model.IsAnswerCorrect = null;
-
 		return model;
     }
+
+	public int GetPreviousPrizeLevelAmount(int prizeLevel)
+	{
+		if (prizeLevel == 1)
+			return 0;
+		return _prizeLevelsRepository.GetPrizeLevel(prizeLevel - 1).PrizeAmount;
+	}
+
+    public int GetPreviousGuaranteedPrizeLevelAmount(int prizeLevel)
+    {
+        if (prizeLevel == 1)
+            return 0;
+        return _prizeLevelsRepository.GetGuaranteedPrizeLevel(prizeLevel - 1).PrizeAmount;
+    }
+
+	public int GetWinningPrizeAmount()
+	{
+		return _prizeLevelsRepository.GetLastPrizeLevel().PrizeAmount;
+	}
 
 
 

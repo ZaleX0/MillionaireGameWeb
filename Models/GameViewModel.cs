@@ -15,4 +15,6 @@ public class GameViewModel
     public int LastAnswerId { get; set; }
 
     public bool? IsAnswerCorrect { get; set; }
+
+    public bool IsGameWon { get; set; }
 }

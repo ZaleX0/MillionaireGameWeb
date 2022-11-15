@@ -17,8 +17,8 @@ public class GameController : Controller
 
     public IActionResult Index()
     {
-        var model = _service.NextGameViewModel(new GameViewModel());
-        return View(model);
+        var model = _service.NextGameViewModel(0);
+        return View("Index", model);
     }
 
     [HttpPost]
@@ -29,15 +29,26 @@ public class GameController : Controller
     }
 
     [HttpPost]
-    public IActionResult NextIndex(GameViewModel model)
+    public IActionResult NextIndex(int prizeLevel)
     {
-        model = _service.NextGameViewModel(model);
+        var model = _service.NextGameViewModel(prizeLevel);
         return View("Index", model);
     }
 
     [HttpPost]
-    public IActionResult GameOver(GameViewModel model)
+    public IActionResult GameOver(int prizeLevel, bool isResigned)
     {
-        return View("GameOver", model);
+        int prizeLevelAmount = isResigned
+            ? _service.GetPreviousPrizeLevelAmount(prizeLevel)
+            : _service.GetPreviousGuaranteedPrizeLevelAmount(prizeLevel);
+
+        return View("GameOver", prizeLevelAmount);
+    }
+
+    [HttpPost]
+    public IActionResult GameWon()
+    {
+        int prizeLevelAmount = _service.GetWinningPrizeAmount();
+        return View("GameOver", prizeLevelAmount);
     }
 }
