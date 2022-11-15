@@ -30,7 +30,8 @@ public class GameService
 	{
 		model.IsAnswerCorrect = _answerRepository.CheckIfAnswerCorrect(model.LastAnswerId);
 
-        if (model.PrizeLevel >= _prizeLevelsRepository.GetLastPrizeLevel().Id)
+		var prizeLevel = _prizeLevelsRepository.GetLastPrizeLevel();
+        if (model.PrizeLevel >= prizeLevel?.Id)
 			if (model.IsAnswerCorrect == true)
 				model.IsGameWon = true;
 
@@ -46,14 +47,14 @@ public class GameService
         var question = GetRandomQuestionDto(model.PrizeLevel);
 		var answers = GetAnswersDto(question.Id);
 
-		// TODO: randomize answer order
 		model.Question = question;
-		model.AnswerA = answers[0];
-		model.AnswerB = answers[1];
-		model.AnswerC = answers[2];
-		model.AnswerD = answers[3];
+		model.AnswerA = PullRandomAnswer(answers);
+		model.AnswerB = PullRandomAnswer(answers);
+		model.AnswerC = PullRandomAnswer(answers);
+		model.AnswerD = PullRandomAnswer(answers);
 
 		model.IsAnswerCorrect = null;
+		model.IsGameWon = false;
 		return model;
     }
 
@@ -61,19 +62,34 @@ public class GameService
 	{
 		if (prizeLevel == 1)
 			return 0;
-		return _prizeLevelsRepository.GetPrizeLevel(prizeLevel - 1).PrizeAmount;
+
+		var prize = _prizeLevelsRepository.GetPrizeLevel(prizeLevel - 1);
+		if (prize == null)
+			return 0;
+
+        return prize.PrizeAmount;
 	}
 
     public int GetPreviousGuaranteedPrizeLevelAmount(int prizeLevel)
     {
         if (prizeLevel == 1)
             return 0;
-        return _prizeLevelsRepository.GetGuaranteedPrizeLevel(prizeLevel - 1).PrizeAmount;
+
+		var prize = _prizeLevelsRepository.GetGuaranteedPrizeLevel(prizeLevel - 1);
+        if (prize == null)
+            return 0;
+
+        return prize.PrizeAmount;
+        
     }
 
 	public int GetWinningPrizeAmount()
 	{
-		return _prizeLevelsRepository.GetLastPrizeLevel().PrizeAmount;
+		var prize = _prizeLevelsRepository.GetLastPrizeLevel();
+		if (prize == null)
+			return 0;
+
+		return prize.PrizeAmount;
 	}
 
 
@@ -100,6 +116,16 @@ public class GameService
 	private int GetPrizeAmount(int prizeLevelId)
 	{
 		var prizeLevel = _prizeLevelsRepository.GetPrizeLevel(prizeLevelId);
+		if (prizeLevel == null)
+			return 0;
+
 		return prizeLevel.PrizeAmount;
+	}
+
+	private AnswerDto PullRandomAnswer(List<AnswerDto> list)
+	{
+		var element = list[new Random().Next(list.Count)];
+		list.Remove(element);
+		return element;
 	}
 }
