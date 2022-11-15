@@ -1,0 +1,55 @@
+﻿@model GameViewModel
+
+<p>@Model.PrizeLevel @Model.PrizeLevelAmount</p>
+<p>@Model.Question.Id @Model.Question.Content</p>
+
+@if (Model.IsAnswerCorrect == null)
+{
+    @using (Html.BeginForm("Index", "Game", FormMethod.Post))
+    {
+        <input type="hidden" name="PrizeLevel" value="@Model.PrizeLevel" />
+        <input type="hidden" name="PrizeLevelAmount" value="@Model.PrizeLevelAmount" />
+        <input type="hidden" name="Question.Id" value="@Model.Question.Id" />
+        <input type="hidden" name="Question.Content" value="@Model.Question.Content" />
+        <input type="hidden" name="AnswerA.Id" value="@Model.AnswerA.Id" />
+        <input type="hidden" name="AnswerB.Id" value="@Model.AnswerB.Id" />
+        <input type="hidden" name="AnswerC.Id" value="@Model.AnswerC.Id" />
+        <input type="hidden" name="AnswerD.Id" value="@Model.AnswerD.Id" />
+        <input type="hidden" name="AnswerA.Content" value="@Model.AnswerA.Content" />
+        <input type="hidden" name="AnswerB.Content" value="@Model.AnswerB.Content" />
+        <input type="hidden" name="AnswerC.Content" value="@Model.AnswerC.Content" />
+        <input type="hidden" name="AnswerD.Content" value="@Model.AnswerD.Content" />
+
+        <button type="submit" name="LastAnswerId" value="@Model.AnswerA.Id">A. @Model.AnswerA.Content</button>
+        <button type="submit" name="LastAnswerId" value="@Model.AnswerB.Id">B. @Model.AnswerB.Content</button>
+        <button type="submit" name="LastAnswerId" value="@Model.AnswerC.Id">C. @Model.AnswerC.Content</button>
+        <button type="submit" name="LastAnswerId" value="@Model.AnswerD.Id">D. @Model.AnswerD.Content</button>
+    }
+}
+@if (Model.IsAnswerCorrect != null)
+{
+    <button disabled>A. @Model.AnswerA.Content</button>
+    <button disabled>B. @Model.AnswerB.Content</button>
+    <button disabled>C. @Model.AnswerC.Content</button>
+    <button disabled>D. @Model.AnswerD.Content</button>
+
+    @if (Model.IsAnswerCorrect == true)
+    {
+        <div>
+            @using (Html.BeginForm("NextIndex", "Game", FormMethod.Post))
+            {
+                <p>Correct!</p>
+                <button type="submit" name="PrizeLevel" value="@Model.PrizeLevel">Next Question</button>
+            }
+        </div>
+    }
+    @if (Model.IsAnswerCorrect == false)
+    {
+        <div>
+            @using (Html.BeginForm("GameOver", "Game", FormMethod.Post))
+            {
+                <button type="submit" name="PrizeLevelAmount" value="@Model.PrizeLevelAmount">GameOver</button>
+            }
+        </div>
+    }
+}
