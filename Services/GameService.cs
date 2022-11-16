@@ -1,7 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using MillionaireWeb.Entities;
 using MillionaireWeb.Models;
 using MillionaireWeb.Repositories;
 
@@ -41,8 +38,11 @@ public class GameService
     public GameViewModel NextGameViewModel(int prizeLevel)
 	{
 		var model = new GameViewModel();
-		model.PrizeLevel = prizeLevel + 1;
+		model.QuestionsCount = GetQuestionsCount();
+
+        model.PrizeLevel = prizeLevel + 1;
 		model.PrizeLevelAmount = GetPrizeAmount(model.PrizeLevel);
+		model.PreviousPrizeLevelAmount = GetPreviousPrizeLevelAmount(model.PrizeLevel);
 
         var question = GetRandomQuestionDto(model.PrizeLevel);
 		var answers = GetAnswersDto(question.Id);
@@ -92,7 +92,14 @@ public class GameService
 		return prize.PrizeAmount;
 	}
 
+	private int GetQuestionsCount()
+	{
+        var prize = _prizeLevelsRepository.GetLastPrizeLevel();
+        if (prize == null)
+            return 0;
 
+        return prize.Id;
+    }
 
     private QuestionDto GetRandomQuestionDto(int prizeLevel)
     {

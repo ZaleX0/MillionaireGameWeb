@@ -17,4 +17,9 @@ public class GameViewModel
     public bool? IsAnswerCorrect { get; set; }
 
     public bool IsGameWon { get; set; }
+
+
+
+    public int QuestionsCount { get; set; }
+    public int PreviousPrizeLevelAmount { get; set; }
 }

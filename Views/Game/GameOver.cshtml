@@ -1,3 +1,11 @@
 ﻿@model int
 
-You have won $@Model.
+<div class="text-center">
+    <p class="display-6">You have won</p>
+    <p class="display-4">$@Model</p>
+
+    <a asp-controller="Game" asp-action="">
+        <button class="btn btn-primary">Play again</button>
+    </a>
+
+</div>

@@ -1,79 +1,87 @@
 ﻿@model GameViewModel
 
-<p>Question number @Model.PrizeLevel - $@Model.PrizeLevelAmount</p>
-<p>@Model.Question.Id - @Model.Question.Content</p>
+<div class="text-center">
+    <p>Question @Model.PrizeLevel out of @Model.QuestionsCount - You are playing for $@Model.PrizeLevelAmount</p>
+    <p class="display-6">@Model.Question.Content</p>
 
-@if (Model.IsAnswerCorrect == null)
-{
-    @using (Html.BeginForm("Index", "Game", FormMethod.Post))
+    @*
+        Before answer is selected it renders this by default
+    *@
+    @if (Model.IsAnswerCorrect == null)
     {
-        <input type="hidden" name="PrizeLevel" value="@Model.PrizeLevel" />
-        <input type="hidden" name="PrizeLevelAmount" value="@Model.PrizeLevelAmount" />
-        <input type="hidden" name="Question.Id" value="@Model.Question.Id" />
-        <input type="hidden" name="Question.Content" value="@Model.Question.Content" />
-        <input type="hidden" name="AnswerA.Id" value="@Model.AnswerA.Id" />
-        <input type="hidden" name="AnswerB.Id" value="@Model.AnswerB.Id" />
-        <input type="hidden" name="AnswerC.Id" value="@Model.AnswerC.Id" />
-        <input type="hidden" name="AnswerD.Id" value="@Model.AnswerD.Id" />
-        <input type="hidden" name="AnswerA.Content" value="@Model.AnswerA.Content" />
-        <input type="hidden" name="AnswerB.Content" value="@Model.AnswerB.Content" />
-        <input type="hidden" name="AnswerC.Content" value="@Model.AnswerC.Content" />
-        <input type="hidden" name="AnswerD.Content" value="@Model.AnswerD.Content" />
-
-        <button type="submit" name="LastAnswerId" value="@Model.AnswerA.Id">A. @Model.AnswerA.Content</button>
-        <button type="submit" name="LastAnswerId" value="@Model.AnswerB.Id">B. @Model.AnswerB.Content</button>
-        <button type="submit" name="LastAnswerId" value="@Model.AnswerC.Id">C. @Model.AnswerC.Content</button>
-        <button type="submit" name="LastAnswerId" value="@Model.AnswerD.Id">D. @Model.AnswerD.Content</button>
-    }
-
-    @using (Html.BeginForm("GameOver", "Game", FormMethod.Post))
-    {
-        <input type="hidden" name="prizeLevel" value="@Model.PrizeLevel" />
-        <button type="submit" name="isResigned" value="true">Resign</button>
-    }
-}
-
-
-
-@if (Model.IsAnswerCorrect != null)
-{
-    <button disabled>A. @Model.AnswerA.Content</button>
-    <button disabled>B. @Model.AnswerB.Content</button>
-    <button disabled>C. @Model.AnswerC.Content</button>
-    <button disabled>D. @Model.AnswerD.Content</button>
-
-    @if (Model.IsAnswerCorrect == true)
-    {
-        @if(Model.IsGameWon)
+        @using (Html.BeginForm("Index", "Game", FormMethod.Post))
         {
-            <div>
+            <input type="hidden" name="QuestionsCount" value="@Model.QuestionsCount" />
+            <input type="hidden" name="PrizeLevel" value="@Model.PrizeLevel" />
+            <input type="hidden" name="PrizeLevelAmount" value="@Model.PrizeLevelAmount" />
+            <input type="hidden" name="Question.Id" value="@Model.Question.Id" />
+            <input type="hidden" name="Question.Content" value="@Model.Question.Content" />
+            <input type="hidden" name="AnswerA.Id" value="@Model.AnswerA.Id" />
+            <input type="hidden" name="AnswerB.Id" value="@Model.AnswerB.Id" />
+            <input type="hidden" name="AnswerC.Id" value="@Model.AnswerC.Id" />
+            <input type="hidden" name="AnswerD.Id" value="@Model.AnswerD.Id" />
+            <input type="hidden" name="AnswerA.Content" value="@Model.AnswerA.Content" />
+            <input type="hidden" name="AnswerB.Content" value="@Model.AnswerB.Content" />
+            <input type="hidden" name="AnswerC.Content" value="@Model.AnswerC.Content" />
+            <input type="hidden" name="AnswerD.Content" value="@Model.AnswerD.Content" />
+
+            <div class="d-flex flex-column mb-4">
+                <button class="btn btn-dark m-2" type="submit" name="LastAnswerId" value="@Model.AnswerA.Id">A. @Model.AnswerA.Content</button>
+                <button class="btn btn-dark m-2" type="submit" name="LastAnswerId" value="@Model.AnswerB.Id">B. @Model.AnswerB.Content</button>
+                <button class="btn btn-dark m-2" type="submit" name="LastAnswerId" value="@Model.AnswerC.Id">C. @Model.AnswerC.Content</button>
+                <button class="btn btn-dark m-2" type="submit" name="LastAnswerId" value="@Model.AnswerD.Id">D. @Model.AnswerD.Content</button>
+            </div>
+            <hr />
+        }
+        @using (Html.BeginForm("GameOver", "Game", FormMethod.Post))
+        {
+            <input type="hidden" name="QuestionsCount" value="@Model.QuestionsCount" />
+            <input type="hidden" name="prizeLevel" value="@Model.PrizeLevel" />
+
+            <p>Resign and take $@Model.PreviousPrizeLevelAmount</p>
+            <button class="btn btn-primary" type="submit" name="isResigned" value="true">Resign</button>
+        }
+    }
+
+    @*
+        After answer is selected it renders appropriate button
+    *@
+    @if (Model.IsAnswerCorrect != null)
+    {
+        <div class="d-flex flex-column">
+            <button class="btn btn-dark m-2" disabled>A. @Model.AnswerA.Content</button>
+            <button class="btn btn-dark m-2" disabled>B. @Model.AnswerB.Content</button>
+            <button class="btn btn-dark m-2" disabled>C. @Model.AnswerC.Content</button>
+            <button class="btn btn-dark m-2" disabled>D. @Model.AnswerD.Content</button>
+        </div>
+        <hr />
+        @if (Model.IsAnswerCorrect == true)
+        {
+            @if(Model.IsGameWon)
+            {
                 @using (Html.BeginForm("GameWon", "Game", FormMethod.Post))
                 {
                     <p>Correct!</p>
-                    <button type="submit" name="prizeLevel" value="@Model.PrizeLevel">Congratulations!</button>
+                    <button class="btn btn-primary m-2" type="submit" name="prizeLevel" value="@Model.PrizeLevel">Congratulations!</button>
                 }
-            </div>
-        }
-        else
-        {
-            <div>
+            }
+            else
+            {
                 @using (Html.BeginForm("NextIndex", "Game", FormMethod.Post))
                 {
                     <p>Correct!</p>
-                    <button type="submit" name="prizeLevel" value="@Model.PrizeLevel">Next Question</button>
+                    <button class="btn btn-success m-2" type="submit" name="prizeLevel" value="@Model.PrizeLevel">Next Question</button>
                 }
-            </div>
+            }
         }
-    }
-    @if (Model.IsAnswerCorrect == false)
-    {
-        <div>
+        @if (Model.IsAnswerCorrect == false)
+        {
             @using (Html.BeginForm("GameOver", "Game", FormMethod.Post))
             {
                 <p>Wrong!</p>
                 <input type="hidden" name="prizeLevel" value="@Model.PrizeLevel" />
-                <button type="submit" name="isResigned" value="false">GameOver</button>
+                <button class="btn btn-danger m-2" type="submit" name="isResigned" value="false">GameOver</button>
             }
-        </div>
+        }
     }
-}
+</div>

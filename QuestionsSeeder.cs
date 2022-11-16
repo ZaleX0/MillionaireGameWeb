@@ -19,7 +19,7 @@ public class QuestionsSeeder
 
         if (!_context.Questions.Any())
         {
-            var questionsAndAnswers = GetQuestionsAndAnswers();
+            var questionsAndAnswers = GetTestQuestionsAndAnswers();
             _context.AddRange(questionsAndAnswers);
             _context.SaveChanges();
         }
@@ -27,7 +27,30 @@ public class QuestionsSeeder
 
     private IEnumerable<Question> GetQuestionsAndAnswers()
     {
-        // TODO seed from file
+        // TODO
+        var level1 = new List<Question>
+        {
+            new Question()
+            {
+                Content = "Test 1?",
+                PrizeLevelId = 1,
+                Answers = new List<Answer>()
+                {
+                    new Answer() { Content = "Correct", IsCorrect = true },
+                    new Answer() { Content = "Wrong1" },
+                    new Answer() { Content = "Wrong2" },
+                    new Answer() { Content = "Wrong3" }
+                }
+            }
+        };
+        
+        var questions = new List<Question>();
+        questions.AddRange(level1);
+        return questions;
+    }
+
+    private IEnumerable<Question> GetTestQuestionsAndAnswers()
+    {
         return new List<Question>()
         {
             new Question()
