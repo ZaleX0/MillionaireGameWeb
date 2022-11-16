@@ -28,7 +28,6 @@ public class QuestionsSeeder
 
     private IEnumerable<Question> GetQuestionsAndAnswers()
     {
-        // TODO
         var level1 = new List<Question>
         {
             new Question()
