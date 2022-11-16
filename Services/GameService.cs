@@ -25,6 +25,9 @@ public class GameService
 
 	public GameViewModel ResultGameViewModel(GameViewModel model)
 	{
+		var answer = _answerRepository.GetCorrectAnswer(model.Question.Id);
+		model.CorrectAnswer = answer.Content;
+
 		model.IsAnswerCorrect = _answerRepository.CheckIfAnswerCorrect(model.LastAnswerId);
 
 		var prizeLevel = _prizeLevelsRepository.GetLastPrizeLevel();

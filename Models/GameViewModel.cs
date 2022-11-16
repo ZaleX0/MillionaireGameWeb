@@ -13,13 +13,11 @@ public class GameViewModel
     public AnswerDto AnswerD { get; set; }
 
     public int LastAnswerId { get; set; }
-
     public bool? IsAnswerCorrect { get; set; }
-
     public bool IsGameWon { get; set; }
 
 
-
+    public string CorrectAnswer { get; set; }
     public int QuestionsCount { get; set; }
     public int PreviousPrizeLevelAmount { get; set; }
 }

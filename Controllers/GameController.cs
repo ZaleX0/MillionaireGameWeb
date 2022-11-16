@@ -29,7 +29,7 @@ public class GameController : Controller
     }
 
     [HttpPost]
-    public IActionResult NextIndex(int prizeLevel)
+    public IActionResult Next(int prizeLevel)
     {
         var model = _service.NextGameViewModel(prizeLevel);
         return View("Index", model);

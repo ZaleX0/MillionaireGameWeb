@@ -24,4 +24,11 @@ public class AnswersRepository
             .First(a => a.Id == answerId)
             .IsCorrect;
     }
+
+    public Answer GetCorrectAnswer(int questionId)
+    {
+        return _context.Answers
+            .Where(a => a.QuestionId == questionId)
+            .First(a => a.IsCorrect);
+    }
 }

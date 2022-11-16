@@ -2,7 +2,9 @@
 
 <div class="text-center">
     <p>Question @Model.PrizeLevel out of @Model.QuestionsCount - You are playing for $@Model.PrizeLevelAmount</p>
-    <p class="display-6">@Model.Question.Content</p>
+    <div class="border border-dark border-2 bg-light rounded m-2">
+        <p class="display-6 p-4">@Model.Question.Content</p>
+    </div>
 
     @*
         Before answer is selected it renders this by default
@@ -67,7 +69,7 @@
             }
             else
             {
-                @using (Html.BeginForm("NextIndex", "Game", FormMethod.Post))
+                @using (Html.BeginForm("Next", "Game", FormMethod.Post))
                 {
                     <p>Correct!</p>
                     <button class="btn btn-success m-2" type="submit" name="prizeLevel" value="@Model.PrizeLevel">Next Question</button>
@@ -78,7 +80,7 @@
         {
             @using (Html.BeginForm("GameOver", "Game", FormMethod.Post))
             {
-                <p>Wrong!</p>
+                <p>Wrong! Correct answer: @Model.CorrectAnswer</p>
                 <input type="hidden" name="prizeLevel" value="@Model.PrizeLevel" />
                 <button class="btn btn-danger m-2" type="submit" name="isResigned" value="false">GameOver</button>
             }
