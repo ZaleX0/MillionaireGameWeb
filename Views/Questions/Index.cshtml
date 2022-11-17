@@ -1,0 +1,56 @@
+﻿@model int
+@{
+    ViewData["Title"] = "Add question";
+}
+
+@using (Html.BeginForm("Index", "Questions", FormMethod.Post))
+{
+    <div class="d-flex flex-column">
+        <div class="row m-2">
+            <label class="col-sm-2 col-form-label">Prize level</label>
+            <div class="col-sm-10">
+                @Html.DropDownList("Prizelevel",
+                    Enumerable.Range(1, Model).Select(x => new SelectListItem {
+                        Text = x.ToString(),
+                        Value = x.ToString()
+                    }), new {@class="form-control"})
+            </div>
+        </div>
+        <div class="row m-2">
+            <label class="col-sm-2 col-form-label">Question</label>
+            <div class="col-sm-10">
+                <input class="form-control border-primary" type="text" name="Question" required/>
+            </div>
+        </div>
+        <div class="row m-2">
+            <label class="col-sm-2 col-form-label">Correct answer</label>
+            <div class="col-sm-10">
+                <input class="form-control border-success" type="text" name="CorrectAnswer" required />
+            </div>
+        </div>
+        <div class="row m-2">
+            <label class="col-sm-2 col-form-label">WrongAnswer1</label>
+            <div class="col-sm-10">
+                <input class="form-control border-danger" type="text" name="WrongAnswer1" required />
+            </div>
+        </div>
+        <div class="row m-2">
+            <label class="col-sm-2 col-form-label">WrongAnswer2</label>
+            <div class="col-sm-10">
+                <input class="form-control border-danger" type="text" name="WrongAnswer2" required />
+            </div>
+        </div>
+        <div class="row m-2">
+            <label class="col-sm-2 col-form-label">WrongAnswer3</label>
+            <div class="col-sm-10">
+                <input class="form-control border-danger" type="text" name="WrongAnswer3" required />
+            </div>
+        </div>
+        <div class="row m-2">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+                <button class="btn btn-primary" type="submit">Add</button>
+            </div>
+        </div>
+    </div>
+}

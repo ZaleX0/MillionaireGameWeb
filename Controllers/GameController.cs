@@ -8,9 +8,9 @@ using MillionaireWeb.Services;
 namespace MillionaireWeb.Controllers;
 public class GameController : Controller
 {
-    private readonly GameService _service;
+    private readonly IGameService _service;
 
-    public GameController(GameService service)
+    public GameController(IGameService service)
     {
         _service = service;
     }

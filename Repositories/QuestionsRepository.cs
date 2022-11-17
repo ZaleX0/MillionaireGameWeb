@@ -4,7 +4,7 @@ using MillionaireWeb.Entities;
 
 namespace MillionaireWeb.Repositories;
 
-public class QuestionsRepository
+public class QuestionsRepository : IQuestionsRepository
 {
 	private readonly GameDbContext _context;
 
@@ -18,5 +18,11 @@ public class QuestionsRepository
 		return _context.Questions
 			.Where(q => q.PrizeLevelId == prizeLevel)
 			.ToList();
+	}
+
+	public void Add(Question question)
+	{
+		_context.Questions.Add(question);
+		_context.SaveChanges();
 	}
 }

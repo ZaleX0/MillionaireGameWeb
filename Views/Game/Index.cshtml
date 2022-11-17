@@ -1,4 +1,7 @@
 ﻿@model GameViewModel
+@{
+    ViewData["Title"] = "Game";
+}
 
 <div class="text-center">
     <p>Question @Model.PrizeLevel out of @Model.QuestionsCount - You are playing for $@Model.PrizeLevelAmount</p>
@@ -82,7 +85,7 @@
             {
                 <p>Wrong! Correct answer: @Model.CorrectAnswer</p>
                 <input type="hidden" name="prizeLevel" value="@Model.PrizeLevel" />
-                <button class="btn btn-danger m-2" type="submit" name="isResigned" value="false">GameOver</button>
+                <button class="btn btn-danger m-2" type="submit" name="isResigned" value="false">Game over</button>
             }
         }
     }

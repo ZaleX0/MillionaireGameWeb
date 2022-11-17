@@ -2,7 +2,7 @@
 
 namespace MillionaireWeb.Repositories;
 
-public class PrizeLevelsRepository
+public class PrizeLevelsRepository : IPrizeLevelsRepository
 {
 	private readonly GameDbContext _context;
 
@@ -30,5 +30,10 @@ public class PrizeLevelsRepository
 		return _context.PrizeLevel
 			.OrderBy(l => l.Id)
 			.LastOrDefault();
+	}
+
+	public int Count()
+	{
+		return _context.PrizeLevel.Count();
 	}
 }

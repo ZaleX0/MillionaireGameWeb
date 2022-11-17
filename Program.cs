@@ -12,13 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<GameDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-builder.Services.AddScoped<QuestionsRepository>();
-builder.Services.AddScoped<AnswersRepository>();
-builder.Services.AddScoped<PrizeLevelsRepository>();
+builder.Services.AddScoped<IQuestionsRepository, QuestionsRepository>();
+builder.Services.AddScoped<IAnswersRepository, AnswersRepository>();
+builder.Services.AddScoped<IPrizeLevelsRepository, PrizeLevelsRepository>();
 builder.Services.AddScoped<QuestionsSeeder>();
 builder.Services.AddScoped<PrizeLevelSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-builder.Services.AddScoped<GameService>();
+builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IQuestionsService, QuestionsService>();
 
 var app = builder.Build();
 

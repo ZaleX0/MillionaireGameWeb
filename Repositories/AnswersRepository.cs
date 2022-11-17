@@ -2,7 +2,7 @@
 
 namespace MillionaireWeb.Repositories;
 
-public class AnswersRepository
+public class AnswersRepository : IAnswersRepository
 {
     private readonly GameDbContext _context;
 

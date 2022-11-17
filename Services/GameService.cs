@@ -4,17 +4,17 @@ using MillionaireWeb.Repositories;
 
 namespace MillionaireWeb.Services;
 
-public class GameService
+public class GameService : IGameService
 {
-	private readonly PrizeLevelsRepository _prizeLevelsRepository;
-	private readonly QuestionsRepository _questionRepository;
-	private readonly AnswersRepository _answerRepository;
+	private readonly IPrizeLevelsRepository _prizeLevelsRepository;
+	private readonly IQuestionsRepository _questionRepository;
+	private readonly IAnswersRepository _answerRepository;
 	private readonly IMapper _mapper;
 
 	public GameService(
-		PrizeLevelsRepository prizeLevelsRepository,
-		QuestionsRepository questionRepository,
-		AnswersRepository answerRepository,
+		IPrizeLevelsRepository prizeLevelsRepository,
+		IQuestionsRepository questionRepository,
+		IAnswersRepository answerRepository,
 		IMapper mapper)
 	{
 		_prizeLevelsRepository = prizeLevelsRepository;
@@ -31,23 +31,23 @@ public class GameService
 		model.IsAnswerCorrect = _answerRepository.CheckIfAnswerCorrect(model.LastAnswerId);
 
 		var prizeLevel = _prizeLevelsRepository.GetLastPrizeLevel();
-        if (model.PrizeLevel >= prizeLevel?.Id)
+		if (model.PrizeLevel >= prizeLevel?.Id)
 			if (model.IsAnswerCorrect == true)
 				model.IsGameWon = true;
 
-        return model;
+		return model;
 	}
 
-    public GameViewModel NextGameViewModel(int prizeLevel)
+	public GameViewModel NextGameViewModel(int prizeLevel)
 	{
 		var model = new GameViewModel();
 		model.QuestionsCount = GetQuestionsCount();
 
-        model.PrizeLevel = prizeLevel + 1;
+		model.PrizeLevel = prizeLevel + 1;
 		model.PrizeLevelAmount = GetPrizeAmount(model.PrizeLevel);
 		model.PreviousPrizeLevelAmount = GetPreviousPrizeLevelAmount(model.PrizeLevel);
 
-        var question = GetRandomQuestionDto(model.PrizeLevel);
+		var question = GetRandomQuestionDto(model.PrizeLevel);
 		var answers = GetAnswersDto(question.Id);
 
 		model.Question = question;
@@ -59,7 +59,7 @@ public class GameService
 		model.IsAnswerCorrect = null;
 		model.IsGameWon = false;
 		return model;
-    }
+	}
 
 	public int GetPreviousPrizeLevelAmount(int prizeLevel)
 	{
@@ -70,21 +70,21 @@ public class GameService
 		if (prize == null)
 			return 0;
 
-        return prize.PrizeAmount;
+		return prize.PrizeAmount;
 	}
 
-    public int GetPreviousGuaranteedPrizeLevelAmount(int prizeLevel)
-    {
-        if (prizeLevel == 1)
-            return 0;
+	public int GetPreviousGuaranteedPrizeLevelAmount(int prizeLevel)
+	{
+		if (prizeLevel == 1)
+			return 0;
 
 		var prize = _prizeLevelsRepository.GetGuaranteedPrizeLevel(prizeLevel - 1);
-        if (prize == null)
-            return 0;
+		if (prize == null)
+			return 0;
 
-        return prize.PrizeAmount;
-        
-    }
+		return prize.PrizeAmount;
+
+	}
 
 	public int GetWinningPrizeAmount()
 	{
@@ -97,30 +97,30 @@ public class GameService
 
 	private int GetQuestionsCount()
 	{
-        var prize = _prizeLevelsRepository.GetLastPrizeLevel();
-        if (prize == null)
-            return 0;
+		var prize = _prizeLevelsRepository.GetLastPrizeLevel();
+		if (prize == null)
+			return 0;
 
-        return prize.Id;
-    }
+		return prize.Id;
+	}
 
-    private QuestionDto GetRandomQuestionDto(int prizeLevel)
-    {
-        var questions = _questionRepository.GetAllByLevel(prizeLevel);
+	private QuestionDto GetRandomQuestionDto(int prizeLevel)
+	{
+		var questions = _questionRepository.GetAllByLevel(prizeLevel);
 
-        int skip = new Random().Next(questions.Count());
-        var question = questions
-            .Skip(skip)
-            .Take(1)
-            .FirstOrDefault();
+		int skip = new Random().Next(questions.Count());
+		var question = questions
+			.Skip(skip)
+			.Take(1)
+			.FirstOrDefault();
 
-        return _mapper.Map<QuestionDto>(question);
-    }
+		return _mapper.Map<QuestionDto>(question);
+	}
 
 	private List<AnswerDto> GetAnswersDto(int questionId)
 	{
-        var answers = _answerRepository.GetByQuestionId(questionId);
-        return _mapper.Map<List<AnswerDto>>(answers);
+		var answers = _answerRepository.GetByQuestionId(questionId);
+		return _mapper.Map<List<AnswerDto>>(answers);
 	}
 
 	private int GetPrizeAmount(int prizeLevelId)
