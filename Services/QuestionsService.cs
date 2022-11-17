@@ -34,17 +34,17 @@ public class QuestionsService : IQuestionsService
         _questionsRepository.Add(question);
 	}
 
-    private void RandomizeAnswerOrder(List<Answer> list)
+    private void RandomizeAnswerOrder(List<Answer> answers)
     {
 		var rng = new Random();
-        int n = list.Count;
+        int n = answers.Count;
         while (n > 1)
         {
             n--;
-            int k = rng.Next(n + 1);
-            var answer = list[k];
-            list[k] = list[n];
-            list[n] = answer;
+            int r = rng.Next(n + 1);
+            var answer = answers[r];
+            answers[r] = answers[n];
+            answers[n] = answer;
         }
     }
 }
