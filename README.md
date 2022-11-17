@@ -12,7 +12,7 @@ This is a simple implementation of popular TV Show
 #### 2. Initiate database
 You need to run `update-database` command in Package Manager Console.
 
-The data would be inserted into database automatically by using the PrizeLevelSeeder and QuestionsSeeder
+The data would be inserted into database automatically by using the `PrizeLevelSeeder` and `QuestionsSeeder`
 
 ## Architecture
 - My project uses EntityFrameworkCore as the tool to communicate with the database
@@ -23,3 +23,9 @@ The data would be inserted into database automatically by using the PrizeLevelSe
 - `QuestionsController` returns the view with "Add question" form and calls QuestionsService to add a new question
 - `QuestionsService` uses mapper and a repository to add a new question with randomly ordered answers
 - `QuestionsAndAnswersMappingProfile` is a mapping profile that I used to easily map different models in one place
+
+## Database
+Database has 3 tables
+- [PrizeLevels](Entities/PrizeLevel.cs) (Id, PrizeAmount, IsGuaranteed)
+- [Questions](Entities/Question.cs) (Id, Content, PrizeAmountId)
+- [Answers](Entities/Answer.cs) (Id, QuestionId, Content IsCorrect)
